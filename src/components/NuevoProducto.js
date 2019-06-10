@@ -2,28 +2,14 @@ import React, { Component } from "react";
 
 //redux
 import { connect } from "react-redux";
-import { mostrarProducto, editarProducto } from "../actions/productosActions";
+import { agregarProducto } from "../actions/productosActions";
 
-class EditarProducto extends Component {
+class NuevoProducto extends Component {
   state = {
     nombre: "",
     precio: "",
     error: false
   };
-
-  componentDidMount() {
-    const { id } = this.props.match.params;
-    this.props.mostrarProducto(id);
-  }
-
-  componentWillReceiveProps(nextProps, nextState) {
-    const { nombre, precio } = nextProps.producto;
-
-    this.setState({
-      nombre,
-      precio
-    });
-  }
 
   nombreProducto = e => {
     this.setState({ nombre: e.target.value });
@@ -33,7 +19,7 @@ class EditarProducto extends Component {
     this.setState({ precio: e.target.value });
   };
 
-  actualizarProducto = e => {
+  nuevoProducto = e => {
     e.preventDefault();
 
     const { nombre, precio } = this.state;
@@ -44,40 +30,35 @@ class EditarProducto extends Component {
     }
     this.setState({ error: false });
 
-    //tomar id
-    const { id } = this.props.match.params;
-
     //crear el objeto
 
     const infoProducto = {
-      id,
       nombre,
       precio
     };
 
-    //Actualizar producto
-    this.props.editarProducto(infoProducto);
+    //crear el nuevo producto
+    this.props.agregarProducto(infoProducto);
 
     //Redireccionar
-    this.props.history.push("/");
+    this.props.history.push('/');
   };
 
   render() {
-    const { nombre, precio, error } = this.state;
+    const { error } = this.state;
     return (
       <div className="row justify-content-center mt-5">
         <div className="col-md-8">
           <div className="card">
             <div className="card-body">
               <h2 className="text-center">Agregar Nuevo Producto</h2>
-              <form onSubmit={this.actualizarProducto}>
+              <form onSubmit={this.nuevoProducto}>
                 <div className="form-group">
                   <label>Titulo</label>
                   <input
                     type="text"
                     className="form-control"
                     placeholder="Titulo"
-                    defaultValue={nombre}
                     onChange={this.nombreProducto}
                   />
                 </div>
@@ -87,7 +68,6 @@ class EditarProducto extends Component {
                     type="text"
                     className="form-control"
                     placeholder="Precio"
-                    defaultValue={precio}
                     onChange={this.precioProducto}
                   />
                 </div>
@@ -95,7 +75,7 @@ class EditarProducto extends Component {
                   type="submit"
                   className="btn btn-primary font-weight-bold text-uppercase d-block w-100"
                 >
-                  GUARDAR CAMBIOS
+                  Agregar
                 </button>
               </form>
 
@@ -113,12 +93,7 @@ class EditarProducto extends Component {
     );
   }
 }
-//state
-const mapStateToProps = state => ({
-  producto: state.productos.producto
-});
-
 export default connect(
-  mapStateToProps,
-  { mostrarProducto, editarProducto }
-)(EditarProducto);
+  null,
+  { agregarProducto }
+)(NuevoProducto);
